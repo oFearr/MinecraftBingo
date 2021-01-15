@@ -1,0 +1,7 @@
+name: MCBingo
+version: ${project.version}
+main: me.ofearr.mcbingo.MCBingo
+api-version: 1.16
+commands:
+  startbingo:
+  endbingo:

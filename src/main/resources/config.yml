@@ -1,0 +1,14 @@
+Settings:
+  #Amt of items for each player to find
+  Goal-Amount: 5
+  Materials:
+    - "ENDER_PEARL"
+    - "COOKED_CHICKEN"
+    - "BLAZE_ROD"
+    - "DIAMOND"
+    - "IRON_INGOT"
+    - "GOLD_SPADE"
+    - "ENCHANTED_BOOK"
+    - "MINECART"
+    - "SADDLE"
+    - "SULFUR"
