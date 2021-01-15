@@ -26,6 +26,7 @@ public final class MCBingo extends JavaPlugin {
     public void onEnable() {
         gameActive = false;
         loadConfig();
+        Bukkit.getPluginManager().registerEvents(new EventListeners(), this);
     }
 
     @Override
