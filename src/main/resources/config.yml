@@ -1,14 +1,12 @@
 Settings:
   #Amt of items for each player to find
   Goal-Amount: 5
+  #Amount of slots in Bingo Card GUI (Multiple of 9 or it wont work!)
+  GUI-Slots: 36
+  #Dont spell like a retard plz
   Materials:
     - "ENDER_PEARL"
     - "COOKED_CHICKEN"
     - "BLAZE_ROD"
     - "DIAMOND"
-    - "IRON_INGOT"
-    - "GOLD_SPADE"
-    - "ENCHANTED_BOOK"
-    - "MINECART"
-    - "SADDLE"
-    - "SULFUR"
+    - "ENDER_EYE"
