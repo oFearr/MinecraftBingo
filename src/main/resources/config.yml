@@ -3,6 +3,8 @@ Settings:
   Goal-Amount: 5
   #Amount of slots in Bingo Card GUI (Multiple of 9 or it wont work!)
   GUI-Slots: 36
+  #amount of winners
+  max-winners: 3
   #Dont spell like a retard plz
   Materials:
     - "ENDER_PEARL"

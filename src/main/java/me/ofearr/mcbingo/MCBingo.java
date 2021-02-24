@@ -35,6 +35,8 @@ public final class MCBingo extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EventListeners(), this);
     }
 
+    public static ArrayList<UUID> winners = new ArrayList<>();
+
     @Override
     public void onDisable() {
         playerObjectives.clear();
@@ -86,14 +88,56 @@ public final class MCBingo extends JavaPlugin {
         return cardGUI;
     }
 
+    static int getMaxWinners = plugin.getConfig().getInt("Settings.max-winners");
+
+
     public static void GameWon(Player player){
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            p.sendTitle(TranslateColour("&a&lGame Over!"), TranslateColour("&aThe game has been won by " + player.getName() + "!"));
-            p.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aThe game has been won by " + player.getName() + "!"));
-            playerObjectives.clear();
-            gameActive = false;
-            p.setCustomName(p.getName());
+        if(winners.size() == getMaxWinners){
+            winners.add(player.getUniqueId());
+        } else{
+            String winString = "";
+            if(winners.size() == 3){
+                Player winner1 = Bukkit.getPlayer(winners.get(0));
+                Player winner2 = Bukkit.getPlayer(winners.get(1));
+                Player winner3 = Bukkit.getPlayer(winners.get(2));
+
+                winString = TranslateColour("&a&l========================\n" +
+                        "&6&lTop 3 Winners\n" +
+                        " \n" +
+                        "&6&l1) " + winner1 + " \n" +
+                        "&e&l2) " + winner2 + " \n" +
+                        "&a&l3) " + winner3 + "\n" +
+                        "&a&l========================");
+            } else if(winners.size() == 2){
+                Player winner1 = Bukkit.getPlayer(winners.get(0));
+                Player winner2 = Bukkit.getPlayer(winners.get(1));
+
+                winString = TranslateColour("&a&l========================\n" +
+                        "&6&lTop 2 Winners\n" +
+                        " \n" +
+                        "&6&l1) " + winner1 + " \n" +
+                        "&e&l2) " + winner2 + " \n" +
+                        "&a&l========================");
+            } else if(winners.size() == 1){
+                Player winner1 = Bukkit.getPlayer(winners.get(0));
+
+                winString = TranslateColour("&a&l========================\n" +
+                        "&6&lWinner\n" +
+                        " \n" +
+                        "&6&l1) " + winner1 + " \n" +
+                        "&a&l========================");
+            }
+
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                p.sendTitle(TranslateColour("&a&lGame Over!"), TranslateColour("&aThe game has been won by " + player.getName() + "!"));
+                p.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aThe game has been won!"));
+                p.sendMessage(winString);
+                playerObjectives.clear();
+                gameActive = false;
+                p.setCustomName(p.getName());
+            }
         }
+
     }
 
     @Override
