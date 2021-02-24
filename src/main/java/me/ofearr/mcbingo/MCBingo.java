@@ -22,11 +22,14 @@ public final class MCBingo extends JavaPlugin {
         return translatedColour;
     }
 
+    public static MCBingo plugin;
+
     public static boolean gameActive;
     public static HashMap<UUID, String> playerObjectives = new HashMap<>();
 
     @Override
     public void onEnable() {
+        plugin = this;
         gameActive = false;
         loadConfig();
         Bukkit.getPluginManager().registerEvents(new EventListeners(), this);
@@ -89,6 +92,7 @@ public final class MCBingo extends JavaPlugin {
             p.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aThe game has been won by " + player.getName() + "!"));
             playerObjectives.clear();
             gameActive = false;
+            p.setCustomName(p.getName());
         }
     }
 
@@ -184,6 +188,7 @@ public final class MCBingo extends JavaPlugin {
 
                                         }
                                         playerObjectives.put(p.getUniqueId(), playerGoal);
+                                        p.setCustomName(TranslateColour("&b" + p.getName() + "&8[&d" + getConfig().get("Settings.Goal-Amount") + "&f/&d" + getConfig().get("Settings.Goal-Amount") + "&8]"));
                                     }
 
                                 }
@@ -206,6 +211,7 @@ public final class MCBingo extends JavaPlugin {
                         p.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aThe game has been ended by " + sender.getName() + "!"));
                         playerObjectives.clear();
                         gameActive = false;
+                        p.setCustomName(p.getName());
                     }
                 }
             }

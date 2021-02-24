@@ -1,5 +1,6 @@
 package me.ofearr.mcbingo;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,6 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -25,6 +27,8 @@ public class EventListeners implements Listener {
 
         return translatedColour;
     }
+
+    MCBingo plugin = MCBingo.plugin;
 
 
     @EventHandler
@@ -98,6 +102,8 @@ public class EventListeners implements Listener {
                     } else {
                         player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aYou've complete one of your bingo objectives!"));
                         player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aCheck your /bingocard to see what's next!"));
+                        Bukkit.broadcastMessage(TranslateColour("&8[&e&lBingo&8] >> &a" + player.getName() + " complete an objective &8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]&a remaining!"));
+                        player.setCustomName(TranslateColour("&b" + player.getName() + "&8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]"));
                     }
 
                     break;
@@ -108,6 +114,13 @@ public class EventListeners implements Listener {
         }
 
         }
+    @EventHandler
+    public void logOut(PlayerQuitEvent e){
+        Player player = e.getPlayer();
+        if(MCBingo.gameActive == true){
+            player.setCustomName(player.getName());
+        }
+    }
 
     @EventHandler
     public void BlockBreak(BlockBreakEvent e){
@@ -141,6 +154,8 @@ public class EventListeners implements Listener {
                 } else {
                     player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aYou've complete one of your bingo objectives!"));
                     player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aCheck your /bingocard to see what's next!"));
+                    Bukkit.broadcastMessage(TranslateColour("&8[&e&lBingo&8] >> &a" + player.getName() + " complete an objective &8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]&a remaining!"));
+                    player.setCustomName(TranslateColour("&b" + player.getName() + "&8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]"));
                 }
 
             }
@@ -185,6 +200,8 @@ public class EventListeners implements Listener {
                     } else {
                         player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aYou've complete one of your bingo objectives!"));
                         player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aCheck your /bingocard to see what's next!"));
+                        Bukkit.broadcastMessage(TranslateColour("&8[&e&lBingo&8] >> &a" + player.getName() + " complete an objective &8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]&a remaining!"));
+                        player.setCustomName(TranslateColour("&b" + player.getName() + "&8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]"));
                     }
                     break;
 
@@ -232,6 +249,8 @@ public class EventListeners implements Listener {
                         } else {
                             player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aYou've complete one of your bingo objectives!"));
                             player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aCheck your /bingocard to see what's next!"));
+                            Bukkit.broadcastMessage(TranslateColour("&8[&e&lBingo&8] >> &a" + player.getName() + " complete an objective &8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]&a remaining!"));
+                            player.setCustomName(TranslateColour("&b" + player.getName() + "&8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]"));
                         }
                         break;
 
@@ -288,6 +307,8 @@ public class EventListeners implements Listener {
                 } else {
                     player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aYou've complete one of your bingo objectives!"));
                     player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aCheck your /bingocard to see what's next!"));
+                    Bukkit.broadcastMessage(TranslateColour("&8[&e&lBingo&8] >> &a" + player.getName() + " complete an objective &8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]&a remaining!"));
+                    player.setCustomName(TranslateColour("&b" + player.getName() + "&8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]"));
                 }
                 break;
 
