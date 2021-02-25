@@ -13,7 +13,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -73,6 +72,8 @@ public class EventListeners implements Listener {
         Material mat = e.getItem().getItemStack().getType();
         Player player = e.getPlayer();
 
+        if(!MCBingo.playerObjectives.containsKey(player.getUniqueId())) return;
+
         if(!(e.getItem().getItemStack().hasItemMeta())){
             ArrayList<String> splitObjectives = new ArrayList<>(Arrays.asList(MCBingo.playerObjectives.get(player.getUniqueId()).split(", ")));
 
@@ -95,13 +96,15 @@ public class EventListeners implements Listener {
                     MCBingo.playerObjectives.remove(player.getUniqueId());
                     MCBingo.playerObjectives.put(player.getUniqueId(), updated);
 
+
                     if(splitObjectives.size() == 0){
+                        Bukkit.broadcastMessage(TranslateColour("&8[&e&lBingo&8] >> &a" + player.getName() + " has complete all their objectives!"));
                         MCBingo.GameWon(player);
+                        MCBingo.playerObjectives.remove(player.getUniqueId());
                     } else {
                         player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aYou've complete one of your bingo objectives!"));
                         player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aCheck your /bingocard to see what's next!"));
                         Bukkit.broadcastMessage(TranslateColour("&8[&e&lBingo&8] >> &a" + player.getName() + " complete an objective &8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]&a remaining!"));
-                        player.setCustomName(TranslateColour("&b" + player.getName() + "&8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]"));
                     }
 
                     break;
@@ -112,19 +115,14 @@ public class EventListeners implements Listener {
         }
 
         }
-    @EventHandler
-    public void logOut(PlayerQuitEvent e){
-        Player player = e.getPlayer();
-        if(MCBingo.gameActive == true){
-            player.setCustomName(player.getName());
-        }
-    }
 
     @EventHandler
     public void BlockBreak(BlockBreakEvent e){
         if(MCBingo.gameActive == false) return;
         Material mat = e.getBlock().getType();
         Player player = e.getPlayer();
+
+        if(!MCBingo.playerObjectives.containsKey(player.getUniqueId())) return;
 
         ArrayList<String> splitObjectives = new ArrayList<>(Arrays.asList(MCBingo.playerObjectives.get(player.getUniqueId()).split(", ")));
 
@@ -148,12 +146,13 @@ public class EventListeners implements Listener {
                 MCBingo.playerObjectives.put(player.getUniqueId(), updated);
 
                 if(splitObjectives.size() == 0){
+                    Bukkit.broadcastMessage(TranslateColour("&8[&e&lBingo&8] >> &a" + player.getName() + " has complete all their objectives!"));
                     MCBingo.GameWon(player);
+                    MCBingo.playerObjectives.remove(player.getUniqueId());
                 } else {
                     player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aYou've complete one of your bingo objectives!"));
                     player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aCheck your /bingocard to see what's next!"));
                     Bukkit.broadcastMessage(TranslateColour("&8[&e&lBingo&8] >> &a" + player.getName() + " complete an objective &8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]&a remaining!"));
-                    player.setCustomName(TranslateColour("&b" + player.getName() + "&8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]"));
                 }
 
             }
@@ -171,6 +170,8 @@ public class EventListeners implements Listener {
         if(e.getSlotType().equals(InventoryType.SlotType.RESULT)){
             Material mat = e.getCurrentItem().getType();
             Player player = (Player) e.getWhoClicked();
+
+            if(!MCBingo.playerObjectives.containsKey(player.getUniqueId())) return;
 
             ArrayList<String> splitObjectives = new ArrayList<>(Arrays.asList(MCBingo.playerObjectives.get(player.getUniqueId()).split(", ")));
 
@@ -194,12 +195,14 @@ public class EventListeners implements Listener {
                     MCBingo.playerObjectives.put(player.getUniqueId(), updated);
 
                     if(splitObjectives.size() == 0){
+                        Bukkit.broadcastMessage(TranslateColour("&8[&e&lBingo&8] >> &a" + player.getName() + " has complete all their objectives!"));
                         MCBingo.GameWon(player);
+                        MCBingo.playerObjectives.remove(player.getUniqueId());
                     } else {
                         player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aYou've complete one of your bingo objectives!"));
                         player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aCheck your /bingocard to see what's next!"));
                         Bukkit.broadcastMessage(TranslateColour("&8[&e&lBingo&8] >> &a" + player.getName() + " complete an objective &8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]&a remaining!"));
-                        player.setCustomName(TranslateColour("&b" + player.getName() + "&8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]"));
+
                     }
                     break;
 
@@ -221,6 +224,7 @@ public class EventListeners implements Listener {
 
 
             if(!(e.getCurrentItem().hasItemMeta())){
+                if(!MCBingo.playerObjectives.containsKey(player.getUniqueId())) return;
                 ArrayList<String> splitObjectives = new ArrayList<>(Arrays.asList(MCBingo.playerObjectives.get(player.getUniqueId()).split(", ")));
 
                 for(int i = 0; i < splitObjectives.size(); i++) {
@@ -243,12 +247,13 @@ public class EventListeners implements Listener {
                         MCBingo.playerObjectives.put(player.getUniqueId(), updated);
 
                         if(splitObjectives.size() == 0){
+                            Bukkit.broadcastMessage(TranslateColour("&8[&e&lBingo&8] >> &a" + player.getName() + " has complete all their objectives!"));
                             MCBingo.GameWon(player);
+                            MCBingo.playerObjectives.remove(player.getUniqueId());
                         } else {
                             player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aYou've complete one of your bingo objectives!"));
                             player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aCheck your /bingocard to see what's next!"));
                             Bukkit.broadcastMessage(TranslateColour("&8[&e&lBingo&8] >> &a" + player.getName() + " complete an objective &8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]&a remaining!"));
-                            player.setCustomName(TranslateColour("&b" + player.getName() + "&8[&d" + splitObjectives.size() + "&f/&d" + plugin.getConfig().get("Settings.Goal-Amount") + "&8]"));
                         }
                         break;
 
@@ -295,13 +300,17 @@ public class EventListeners implements Listener {
                 for (String cVal : splitObjectives) {
                     builder.append(cVal + ", ");
                 }
-                String updated = builder.toString().substring(0, builder.length() - 2);
+               if(builder.length() > 2){
+                   String updated = builder.toString().substring(0, builder.length() - 2);
 
-                MCBingo.playerObjectives.remove(player.getUniqueId());
-                MCBingo.playerObjectives.put(player.getUniqueId(), updated);
+                   MCBingo.playerObjectives.remove(player.getUniqueId());
+                   MCBingo.playerObjectives.put(player.getUniqueId(), updated);
+               }
 
                 if(splitObjectives.size() == 0){
+                    Bukkit.broadcastMessage(TranslateColour("&8[&e&lBingo&8] >> &a" + player.getName() + " has complete all their objectives!"));
                     MCBingo.GameWon(player);
+                    MCBingo.playerObjectives.remove(player.getUniqueId());
                 } else {
                     player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aYou've complete one of your bingo objectives!"));
                     player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aCheck your /bingocard to see what's next!"));

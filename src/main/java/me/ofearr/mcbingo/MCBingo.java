@@ -76,7 +76,9 @@ public final class MCBingo extends JavaPlugin {
         }
 
         for (int i = 0; i < remainingObj.size(); i++){
-
+            if(Material.getMaterial(String.valueOf(remainingObj.get(i))) == null){
+                System.out.println("Error while collecting values, " + remainingObj.get(i) + " is a null item!");
+            }
                 ItemStack currentItem = new ItemStack(Material.getMaterial(String.valueOf(remainingObj.get(i))));
 
                 cardGUI.setItem(i, currentItem);
@@ -90,23 +92,23 @@ public final class MCBingo extends JavaPlugin {
 
 
     public static void GameWon(Player player){
-        if(!(winners.size() == 3)){
+        if(winners.size() < 3){
+            System.out.println("Added player to winners list!");
             winners.add(player.getUniqueId());
-        } else{
+        } if(winners.size() >= 3){
+            System.out.println("There are currently 3 winners, sending command.");
             String winString = "";
-            if(winners.size() == 3){
                 Player winner1 = Bukkit.getPlayer(winners.get(0));
                 Player winner2 = Bukkit.getPlayer(winners.get(1));
                 Player winner3 = Bukkit.getPlayer(winners.get(2));
 
                 winString = TranslateColour("&a&l=========================\n" +
-                        "      &6&lTop 3 Winners\n" +
+                        "        &6&lTop 3 Winners\n" +
                         " \n" +
-                        "   &6&l1) " + winner1 + " \n" +
-                        "   &e&l2) " + winner2 + " \n" +
-                        "   &a&l3) " + winner3 + "\n" +
+                        "       &6&l1) " + winner1.getName() + " \n" +
+                        "       &e&l2) " + winner2.getName()  + " \n" +
+                        "       &c&l3) " + winner3.getName()  + "\n" +
                         "&a&l=========================");
-            }
 
             for (Player p : Bukkit.getOnlinePlayers()) {
                 p.sendTitle(TranslateColour("&a&lGame Over!"), TranslateColour("&aThe game has been won!"));
@@ -114,7 +116,7 @@ public final class MCBingo extends JavaPlugin {
                 p.sendMessage(winString);
                 playerObjectives.clear();
                 gameActive = false;
-                p.setCustomName(p.getName());
+                winners.clear();
             }
         }
 
@@ -134,6 +136,7 @@ public final class MCBingo extends JavaPlugin {
                         }
 
                         playerObjectives.clear();
+                        winners.clear();
 
                         new BukkitRunnable() {
 
@@ -198,28 +201,35 @@ public final class MCBingo extends JavaPlugin {
                                     for(Player p : Bukkit.getOnlinePlayers()){
                                         p.getInventory().clear();
                                         String playerGoal = "";
-                                        for(int i = 0; i < getConfig().getInt("Settings.Goal-Amount"); i++){
-                                            Random rand = new Random();
-                                            int locIndex = rand.nextInt(getConfig().getStringList("Settings.Materials").size());
 
-                                            String selectedItem = getConfig().getStringList("Settings.Materials").get(locIndex);
+                                        List<String> items = getConfig().getStringList("Settings.Materials");
+                                        try{
+                                            for(int i = 0; i < getConfig().getInt("Settings.Goal-Amount"); i++){
+                                                Random rand = new Random();
+                                                int locIndex = rand.nextInt(items.size());
 
-                                            if(i < getConfig().getInt("Settings.Goal-Amount") - 1){
-                                                playerGoal = playerGoal + selectedItem + ", ";
-                                            } else{
-                                                playerGoal = playerGoal + selectedItem;
+                                                String selectedItem = items.get(locIndex);
+                                                items.remove(locIndex);
+
+                                                if(i < getConfig().getInt("Settings.Goal-Amount") - 1){
+                                                    playerGoal = playerGoal + selectedItem + ", ";
+                                                } else{
+                                                    playerGoal = playerGoal + selectedItem;
+                                                }
+
                                             }
-
+                                            playerObjectives.put(p.getUniqueId(), playerGoal);
+                                        }catch (IndexOutOfBoundsException e){
+                                            System.out.println("Caught Exception: You don't have enough items in your items list!");
                                         }
-                                        playerObjectives.put(p.getUniqueId(), playerGoal);
-                                        p.setCustomName(TranslateColour("&b" + p.getName() + "&8[&d" + getConfig().get("Settings.Goal-Amount") + "&f/&d" + getConfig().get("Settings.Goal-Amount") + "&8]"));
+
+
                                     }
 
                                 }
                                 gameTimer--;
                             }
                         }.runTaskTimer(this, 0, 20L);
-
 
                 }
             }
@@ -234,8 +244,8 @@ public final class MCBingo extends JavaPlugin {
                     for(Player p : Bukkit.getOnlinePlayers()){
                         p.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aThe game has been ended by " + sender.getName() + "!"));
                         playerObjectives.clear();
+                        winners.clear();
                         gameActive = false;
-                        p.setCustomName(p.getName());
                     }
                 }
             }
@@ -247,7 +257,10 @@ public final class MCBingo extends JavaPlugin {
                 if (!(player.hasPermission("bingo.card"))) {
                     player.sendMessage(ChatColor.RED + "Insufficient permissions!");
                 } else {
-                    if(playerObjectives.containsKey(player.getUniqueId())){
+                    if(!playerObjectives.containsKey(player.getUniqueId()) && gameActive == true){
+                        player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &cYou don't have any current objectives!"));
+                    }
+                    else if(playerObjectives.containsKey(player.getUniqueId())){
                         BingoCardGUI(player);
                     } else {
                         player.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &cYou can only issue this command during a game!"));
