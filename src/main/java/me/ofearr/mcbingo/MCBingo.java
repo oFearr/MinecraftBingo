@@ -35,7 +35,7 @@ public final class MCBingo extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EventListeners(), this);
     }
 
-    public static ArrayList<UUID> winners = new ArrayList<>();
+    public static ArrayList<String> winners = new ArrayList<>();
 
     @Override
     public void onDisable() {
@@ -65,8 +65,7 @@ public final class MCBingo extends JavaPlugin {
 
         fillerLore.add(TranslateColour(" "));
         fillerLore.add(TranslateColour("&aShould you encounter any bugs,"));
-        fillerLore.add(TranslateColour("&aplease report them to &noFearr&a,"));
-        fillerLore.add(TranslateColour("&a&nDemonify&a or &nOhEmily."));
+        fillerLore.add(TranslateColour("&aplease contact an &nAdministrator&a."));
 
         fillerMeta.setLore(fillerLore);
         fillerItem.setItemMeta(fillerMeta);
@@ -94,30 +93,28 @@ public final class MCBingo extends JavaPlugin {
     public static void GameWon(Player player){
         if(winners.size() < 3){
             System.out.println("Added player to winners list!");
-            winners.add(player.getUniqueId());
+            winners.add(player.getName());
         } if(winners.size() >= 3){
             System.out.println("There are currently 3 winners, sending command.");
             String winString = "";
-                Player winner1 = Bukkit.getPlayer(winners.get(0));
-                Player winner2 = Bukkit.getPlayer(winners.get(1));
-                Player winner3 = Bukkit.getPlayer(winners.get(2));
 
                 winString = TranslateColour("&a&l=========================\n" +
                         "        &6&lTop 3 Winners\n" +
                         " \n" +
-                        "       &6&l1) " + winner1.getName() + " \n" +
-                        "       &e&l2) " + winner2.getName()  + " \n" +
-                        "       &c&l3) " + winner3.getName()  + "\n" +
+                        "       &6&l1) " + winners.get(0) + " \n" +
+                        "       &e&l2) " + winners.get(1)  + " \n" +
+                        "       &c&l3) " + winners.get(2)  + "\n" +
                         "&a&l=========================");
 
             for (Player p : Bukkit.getOnlinePlayers()) {
                 p.sendTitle(TranslateColour("&a&lGame Over!"), TranslateColour("&aThe game has been won!"));
                 p.sendMessage(TranslateColour("&8[&e&lBingo&8] >> &aThe game has been won!"));
                 p.sendMessage(winString);
-                playerObjectives.clear();
-                gameActive = false;
-                winners.clear();
             }
+
+            playerObjectives.clear();
+            gameActive = false;
+            winners.clear();
         }
 
     }
